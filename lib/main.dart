@@ -6,6 +6,8 @@ void main() {
   runApp(MyApp());
 }
 
+//123
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,8 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
+final double espacoTextoCampo = 20;
+
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -35,11 +39,9 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = true;
     });
 
-    final String email = _emailController.text;
+    final String email = _emailController.text.trim();
     final String password = _passwordController.text;
-
-    // Replace this with your actual API endpoint
-    final String apiUrl = "https://your-api-endpoint.com/login";
+    final String apiUrl = "http://192.168.15.10:8080/login";
 
     try {
       final response = await http.post(
@@ -48,38 +50,36 @@ class _LoginScreenState extends State<LoginScreen> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, String>{
-          'usuario': email,
+          'nome': email,
           'senha': password,
         }),
       );
 
       if (response.statusCode == 200) {
-        // Assuming the API returns a JSON object with a 'success' key
         final responseData = jsonDecode(response.body);
-        final bool loginSuccess = responseData['success'];
+        print(responseData.toString());
+        final bool loginSuccess = responseData['success'] == true;
 
         if (loginSuccess) {
-          // Navigate to the next screen or show a success message
           print("Login bem-sucedido!");
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Login bem-sucedido!')),
           );
+          // Aqui você pode redirecionar o usuário, salvar token, etc.
         } else {
-          // Show an error message from the server
-          print("Falha no login: ${responseData['message']}");
+          String message = responseData['message'] ?? "Usuário ou senha incorretos";
+          print("Falha no login: $message");
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Falha no login: ${responseData['message']}')),
+            SnackBar(content: Text('Falha no login: $message')),
           );
         }
       } else {
-        // Handle non-200 status codes
         print("Erro de servidor: ${response.statusCode}");
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Erro de servidor: ${response.statusCode}')),
         );
       }
     } catch (e) {
-      // Handle network or other errors
       print("Ocorreu um erro: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ocorreu um erro: Verifique sua conexão.')),
@@ -118,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 50),
                 const Center(
                   child: Text(
-                    'ERP',
+                    'TERMINAL',
                     style: TextStyle(
                       fontSize: 48,
                       fontWeight: FontWeight.bold,
@@ -128,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 50),
                 const Text(
-                  'Email',
+                  'Login',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -138,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextField(
                   controller: _emailController,
                   decoration: InputDecoration(
-                    hintText: 'digite seu email',
+                    hintText: 'Informe aqui seu usuário',
                     filled: true,
                     fillColor: Colors.grey[700],
                     border: OutlineInputBorder(
@@ -151,7 +151,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   style: const TextStyle(color: Colors.white),
                 ),
-                const SizedBox(height: 24),
+
+                const SizedBox(height: 40),
+
                 const Text(
                   'Senha',
                   style: TextStyle(
@@ -159,12 +161,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 8),
+
+                SizedBox(height: espacoTextoCampo),
+
                 TextField(
                   controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
-                    hintText: 'digite sua senha',
+                    hintText: 'Digite sua senha',
                     filled: true,
                     fillColor: Colors.grey[700],
                     border: OutlineInputBorder(
@@ -177,23 +181,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   style: const TextStyle(color: Colors.white),
                 ),
-                const SizedBox(height: 16),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      // Handle "Esqueci minha senha"
-                      print("Esqueci minha senha pressed!");
-                    },
-                    child: const Text(
-                      'Esqueci minha senha',
-                      style: TextStyle(
-                        color: Colors.blue,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
+
+                SizedBox(height: espacoTextoCampo),
                 _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : Container(

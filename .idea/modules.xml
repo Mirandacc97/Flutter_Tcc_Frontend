@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/flutter_tcc_frontend.iml" filepath="$PROJECT_DIR$/.idea/flutter_tcc_frontend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pdv2.iml" filepath="$PROJECT_DIR$/pdv2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../flutter_tcc_frontend/android/pdv2_android.iml" filepath="$PROJECT_DIR$/../flutter_tcc_frontend/android/pdv2_android.iml" />
     </modules>
   </component>
 </project>
